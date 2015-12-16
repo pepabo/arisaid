@@ -25,7 +25,11 @@ module Arisaid
     end
 
     def user(id)
-      @users["#{id}"] ||= client.user(id)
+      users.find { |u| u.id == id }
+    end
+
+    def users
+      @users ||= client.users
     end
 
     def remote!
@@ -60,7 +64,6 @@ module Arisaid
 
     def initialize(team = nil)
       @usergroups_users = {}
-      @users = {}
       self.slack_team = team
       prepare
     end
@@ -129,8 +132,8 @@ module Arisaid
 
     def usernames_to_ids(usernames)
       usernames.each.with_object([]) do |username, memo|
-        id, _ = @users.find { |k,v| v.name == username }
-        memo << id if id
+        user = users.find { |u| u.name == username }
+        memo << user.id if user
       end
     end
 
