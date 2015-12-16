@@ -1,16 +1,33 @@
 require 'pit'
 require 'io/console'
+require 'arisaid/faraday/request_limitter'
 
 module Arisaid
   module Configurable
     def prepare
       slack_team
       slack_token
-      Breacan.setup
+      client.setup
+
+      client.configure do |config|
+        config.middleware = ::Faraday::RackBuilder.new do |c|
+          c.adapter ::Faraday.default_adapter
+          c.request :limitter
+          c.response :breacan_custom
+        end
+      end
+    end
+
+    def client
+      Breacan
     end
 
     def slack_team
       ENV['BREACAN_TEAM'] ||= ask_slack_team
+    end
+
+    def slack_team=(team)
+      ENV['BREACAN_TEAM'] = team
     end
 
     def ask_slack_team

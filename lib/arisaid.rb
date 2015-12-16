@@ -7,4 +7,9 @@ require 'arisaid/configurable'
 require 'arisaid/usergroups'
 
 module Arisaid
+  class << self
+    def read_only?
+      true
+    end
+  end
 end
