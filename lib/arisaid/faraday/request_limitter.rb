@@ -16,7 +16,7 @@ module Arisaid
         if !Arisaid.read_only? || env.method == :get
           @app.call(env)
         else
-          mocking env
+          mocking(env)
         end
       end
     end

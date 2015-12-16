@@ -5,7 +5,7 @@ module Arisaid
     attr_reader :usergroups_users, :users
 
     def local_file
-      @local_file ||= "#{slack_team}.ussergroups.yml"
+      @local_file ||= "#{slack_team}.usergroups.yml"
     end
 
     def local_file_path
