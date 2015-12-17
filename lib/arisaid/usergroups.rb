@@ -1,11 +1,12 @@
 module Arisaid
   class Usergroups
-    include Arisaid::Configurable
+    include Arisaid::Client
+
     attr_writer :local_file
     attr_reader :usergroups_users, :users
 
     def local_file
-      @local_file ||= "#{slack_team}.usergroups.yml"
+      @local_file ||= "#{Arisaid.conf_prefix if Arisaid.conf_prefix}usergroups.yml"
     end
 
     def local_file_path
@@ -64,8 +65,7 @@ module Arisaid
 
     def initialize(team = nil)
       @usergroups_users = {}
-      self.slack_team = team
-      prepare
+      Arisaid.slack_team = team
     end
 
     def show
@@ -86,7 +86,7 @@ module Arisaid
 
       remote.each do |dst|
         src = local.find { |l| dst['name'] == l['name'] }
-        delete src if src.nil?
+        disable dst if src.nil?
       end
 
       nil
@@ -101,17 +101,17 @@ module Arisaid
     end
 
     def create(src)
-      group = client.create_usergroup src.slice(*self.class.usergroup_valid_attributes)
+      group = client.create_usergroup src.slice(*self.class.usergroup_valid_attributes.map(&:to_s))
       data = {
         usergroup: group.id,
-        users: usernames_to_ids(src['users'])
+        users: usernames_to_ids(src['users']).join(',')
       }
       client.update_usergroup_users(data)
     end
 
-    def delete(src)
-      group = usergroups.find { |g| g.name == src['name'] }
-      client.delete_usergroup(usergroup: group.id)
+    def disable(dst)
+      group = usergroups.find { |g| g.name == dst['name'] }
+      client.disable_usergroup(usergroup: group.id)
     end
 
     def update(src, dst)

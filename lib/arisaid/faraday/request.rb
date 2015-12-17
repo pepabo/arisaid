@@ -2,7 +2,7 @@ require 'uri'
 
 module Arisaid
   module Faraday
-    class RequestLimitable < ::Faraday::Middleware
+    class Request < ::Faraday::Middleware
       def response_status
         200
       end
@@ -17,7 +17,9 @@ module Arisaid
       end
 
       def show_request(env)
-        puts "#{env.method}: #{URI.unescape(env.url.to_s.gsub(/token=[a-z0-9\-]*/, 'token=***********************'))}"
+        escaped_url = env.url.to_s
+        unescaped_url = URI.unescape(escaped_url)
+        puts "#{env.method}: #{unescaped_url.gsub(/token=[a-z0-9\-]*/, "token=#{'*'*10}")}"
       end
 
       def stub_out(env)
@@ -38,4 +40,4 @@ module Arisaid
   end
 end
 
-::Faraday::Request.register_middleware limitable: -> { ::Arisaid::Faraday::RequestLimitable }
+::Faraday::Request.register_middleware arisaid: -> { ::Arisaid::Faraday::Request }

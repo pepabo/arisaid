@@ -1,25 +1,48 @@
 require 'pit'
 require 'io/console'
-require 'arisaid/faraday/request_limitable'
 
 module Arisaid
   module Configurable
-    def prepare
+    OPTIONS_KEYS = %i(
+      debug
+      read_only
       slack_team
       slack_token
-      client.setup
+      save_token
+      conf_prefix
+    )
 
-      client.configure do |config|
-        config.middleware = ::Faraday::RackBuilder.new do |c|
-          c.request :limitable
-          c.response :breacan_custom
-          c.adapter ::Faraday.default_adapter
-        end
-      end
+    attr_accessor(*OPTIONS_KEYS)
+
+    def self.extended(base)
+      base.reset
     end
 
-    def client
-      Breacan
+    def reset
+      self.debug       = false
+      self.read_only   = true
+      self.save_token  = false
+      self.conf_prefix = nil
+    end
+
+    def options
+      OPTIONS_KEYS.inject({}) { |o, k| o.merge!(k => send(k)) }
+    end
+
+    def configure
+      yield self
+    end
+
+    def debug?
+      @debug
+    end
+
+    def read_only?
+      @read_only
+    end
+
+    def save_token?
+      @save_token
     end
 
     def slack_team
@@ -44,7 +67,7 @@ module Arisaid
 
       if token.nil?
         token = ask_slack_token
-        save_slack_token_by_pit token
+        save_slack_token_by_pit(token) if save_token?
       end
 
       token
