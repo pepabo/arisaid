@@ -125,7 +125,7 @@ module Arisaid
       group = usergroups.find { |g| g.name == src['name'] }
       data = {
         usergroup: group.id,
-        users: usernames_to_ids(src['users'])
+        users: usernames_to_ids(src['users']).join(',')
       }
       client.update_usergroup_users(data)
     end
