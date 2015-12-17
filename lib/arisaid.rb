@@ -9,6 +9,10 @@ require 'arisaid/usergroups'
 
 module Arisaid
   class << self
+    def debug?
+      true
+    end
+
     def read_only?
       true
     end
