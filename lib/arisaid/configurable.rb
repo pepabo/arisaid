@@ -1,6 +1,6 @@
 require 'pit'
 require 'io/console'
-require 'arisaid/faraday/request_limitter'
+require 'arisaid/faraday/request_limitable'
 
 module Arisaid
   module Configurable
@@ -11,9 +11,9 @@ module Arisaid
 
       client.configure do |config|
         config.middleware = ::Faraday::RackBuilder.new do |c|
-          c.adapter ::Faraday.default_adapter
-          c.request :limitter
+          c.request :limitable
           c.response :breacan_custom
+          c.adapter ::Faraday.default_adapter
         end
       end
     end
