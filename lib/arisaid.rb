@@ -9,6 +9,7 @@ require 'arisaid/configurable'
 require 'arisaid/client'
 require 'arisaid/syncable'
 require 'arisaid/usergroups'
+require 'arisaid/users'
 
 module Arisaid
   class << self
@@ -16,6 +17,10 @@ module Arisaid
 
     def usergroups(team = '')
       @usergroups ||= Usergroups.new(team)
+    end
+
+    def users(team = '')
+      @users ||= Users.new(team)
     end
   end
 end
