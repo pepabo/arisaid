@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'arisaid/cli'
+
+Arisaid::CLI.start
