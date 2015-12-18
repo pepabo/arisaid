@@ -17,9 +17,8 @@ module Arisaid
       end
 
       def show_request(env)
-        escaped_url = env.url.to_s
-        unescaped_url = URI.unescape(escaped_url)
-        puts "#{env.method}: #{unescaped_url.gsub(/token=[a-z0-9\-]*/, "token=#{'*'*10}")}"
+        unescaped_url = URI.unescape(env.url.to_s)
+        puts "#{env.method}: #{Breacan::Error.new.send(:redact_url, unescaped_url)}"
       end
 
       def stub_out(env)
