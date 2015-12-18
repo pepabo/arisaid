@@ -1,32 +1,25 @@
 module Arisaid
   class Usergroups
     include Arisaid::Client
+    include Arisaid::Syncable
 
-    attr_writer :local_file
-    attr_reader :usergroups_users, :users
-
-    def local_file
-      @local_file ||= "#{Arisaid.conf_prefix if Arisaid.conf_prefix}usergroups.yml"
-    end
-
-    def local_file_path
-      File.join(Dir.pwd, local_file)
-    end
-
-    def remote
-      @remote ||= remote!
-    end
+    attr_reader :users
 
     def usergroups
-      @usergroups ||= client.usergroups
+      @usergroups || usergroups!
     end
 
-    def usergroup_users(id)
-      @usergroups_users["#{id}"] ||= client.usergroup_users(id)
+    def usergroups!
+      @usergroups = usergroups_with_disabled!.select { |g| g.deleted_by.nil? }
     end
 
-    def user(id)
-      users.find { |u| u.id == id }
+    def usergroups_with_disabled
+      @usergroups_with_disabled || usergroups_with_disabled!
+    end
+
+    def usergroups_with_disabled!
+      @usergroups_with_disabled =
+        client.usergroups(include_users: 1, include_disabled: 1)
     end
 
     def users
@@ -34,66 +27,45 @@ module Arisaid
     end
 
     def remote!
-      usergroups.map { |group|
+      @remote = usergroups!.map { |group|
         hash = group.to_h.slice(*self.class.usergroup_valid_attributes)
-        ids = usergroup_users(group.id)
-        hash[:users] = ids.empty? ? [] : ids.map { |id| user(id).name }
+        hash[:users] = group.users.map { |id| users.find_by(id: id).name }
         hash.stringify_keys
       }
     end
 
-    def local
-      local_by_stdin || local_by_file
-    end
-
-    def local_by_stdin
-      if File.pipe?(STDIN) || File.select([STDIN], [], [], 0) != nil
-        buffer = ''
-        while str = STDIN.gets
-          buffer << str
-        end
-        buffer.chomp
-      end
-    end
-
-    def local_by_file
-      unless File.exists?(local_file_path)
-        raise Arisaid::ConfNotFound.new("Not found: #{local_file_path}")
-      end
-      YAML.load_file(local_file_path)
-    end
-
-    def initialize(team = nil)
-      @usergroups_users = {}
-      Arisaid.slack_team = team
-    end
-
-    def show
-      puts remote.to_yaml
-    end
-
     def apply
-      local.each do |src|
-        dst = remote.find { |d| src['name'] == d['name'] }
+      enabled = false
 
+      local.each do |src|
+        dst = remote.find_by(name: src['name'])
+        next unless dst.nil?
+
+        group = usergroups_with_disabled.find_by(name: src['name'])
+        if group
+          enable group
+          enabled = true
+        end
+      end
+
+      remote! if enabled
+
+      local.each do |src|
+        dst = remote.find_by(name: src['name'])
         case
         when dst.nil? then create src
         when same?(src, dst) then nil
-        when changed?(src, dst) then update(src, dst)
-        else update_users(src, dst)
+        when changed?(src, dst) then update(src)
+        else update_users(src)
         end
       end
 
       remote.each do |dst|
-        src = local.find { |l| dst['name'] == l['name'] }
+        src = local.find_by(name: dst['name'])
         disable dst if src.nil?
       end
 
       nil
-    end
-
-    def same?(src, dst)
-      src == dst
     end
 
     def changed?(src, dst)
@@ -101,30 +73,31 @@ module Arisaid
     end
 
     def create(src)
-      group = client.create_usergroup src.slice(*self.class.usergroup_valid_attributes.map(&:to_s))
-      data = {
-        usergroup: group.id,
-        users: usernames_to_ids(src['users']).join(',')
-      }
-      client.update_usergroup_users(data)
+      group = client.create_usergroup(
+        src.slice(*self.class.usergroup_valid_attributes.map(&:to_s)))
+      update_users(nil, group.id)
+    end
+
+    def enable(group)
+      client.enable_usergroup(usergroup: group.id)
     end
 
     def disable(dst)
-      group = usergroups.find { |g| g.name == dst['name'] }
+      group = usergroups.find_by(name: dst['name'])
       client.disable_usergroup(usergroup: group.id)
     end
 
-    def update(src, dst)
-      group = usergroups.find { |g| g.name == src['name'] }
+    def update(src)
+      group = usergroups.find_by(src['name'])
       data = src.dup
       data[:usergroup] = group.id
       client.update_usergroup(data)
     end
 
-    def update_users(src, dst)
-      group = usergroups.find { |g| g.name == src['name'] }
+    def update_users(src, group_id = nil)
+      group_id = usergroups.find_by(name: src['name']).id if group_id.nil?
       data = {
-        usergroup: group.id,
+        usergroup: group_id,
         users: usernames_to_ids(src['users']).join(',')
       }
       client.update_usergroup_users(data)
@@ -132,13 +105,9 @@ module Arisaid
 
     def usernames_to_ids(usernames)
       usernames.each.with_object([]) do |username, memo|
-        user = users.find { |u| u.name == username }
+        user = users.find_by(name: username)
         memo << user.id if user
       end
-    end
-
-    def save
-      File.write local_file_path, remote.to_yaml
     end
 
     class << self

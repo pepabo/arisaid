@@ -7,6 +7,7 @@ require 'arisaid/core_ext/array'
 require 'arisaid/error'
 require 'arisaid/configurable'
 require 'arisaid/client'
+require 'arisaid/syncable'
 require 'arisaid/usergroups'
 
 module Arisaid
