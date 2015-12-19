@@ -29,7 +29,7 @@ module Arisaid
         while str = STDIN.gets
           buffer << str
         end
-        buffer.chomp
+        YAML.load(buffer.chomp)
       end
     end
 
