@@ -1,5 +1,6 @@
 require 'breacan'
 require 'yaml'
+require 'thor'
 
 require 'arisaid/version'
 require 'arisaid/core_ext/hash'
@@ -10,6 +11,7 @@ require 'arisaid/client'
 require 'arisaid/syncable'
 require 'arisaid/usergroups'
 require 'arisaid/users'
+require 'arisaid/cli'
 
 module Arisaid
   class << self
