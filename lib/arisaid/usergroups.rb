@@ -58,7 +58,7 @@ module Arisaid
         when changed?(src, dst) then update(src)
         else update_users(src)
         end
-      end
+      end if !(enabled && Arisaid.read_only?)
 
       remote.each do |dst|
         src = local.find_by(name: dst['name'])
