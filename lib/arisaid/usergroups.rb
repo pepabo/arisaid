@@ -29,9 +29,10 @@ module Arisaid
     def remote!
       @remote = usergroups!.map { |group|
         hash = group.to_h.slice(*self.class.usergroup_valid_attributes)
+        next unless group.users
         hash[:users] = group.users.map { |id| users.find_by(id: id).name }
         hash.stringify_keys
-      }
+      }.compact
     end
 
     def apply
