@@ -75,7 +75,7 @@ module Arisaid
     def create(src)
       group = client.create_usergroup(
         src.slice(*self.class.usergroup_valid_attributes.map(&:to_s)))
-      update_users(nil, group.id)
+      update_users(nil, group.id) if group.respond_to?(:id)
     end
 
     def enable(group)
