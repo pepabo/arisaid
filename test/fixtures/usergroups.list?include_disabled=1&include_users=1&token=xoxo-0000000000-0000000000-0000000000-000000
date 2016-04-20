@@ -1,0 +1,31 @@
+{
+    "ok":true,
+    "usergroups": [
+        {
+            "id": "S0AAAAAA0",
+            "team_id": "T01AAA0AA",
+            "is_usergroup": true,
+            "is_subteam": true,
+            "name": "tokyo",
+            "description": "Tokyo Members",
+            "handle": "tokyo",
+            "is_external": false,
+            "date_create": 1447294518,
+            "date_update": 1447295584,
+            "date_delete": 0,
+            "auto_type": null,
+            "created_by": "U00A0AAA0",
+            "updated_by": "U00A0AAA0",
+            "deleted_by": null,
+            "prefs": {
+                "channels": [],
+                "groups": []
+            },
+            "users": [
+                "U000A01A1",
+                "U000A01A3"
+            ],
+            "user_count": 2
+        }
+    ]
+}
