@@ -4,7 +4,7 @@ require 'arisaid'
 require 'minitest/autorun'
 require 'webmock/minitest'
 
-ENV['BREACAN_ACESS_TOKEN'] = 'x' * 40
+ENV['BREACAN_ACCESS_TOKEN'] = "xoxo-#{'0'*10}-#{'0'*10}-#{'0'*10}-#{'0'*6}"
 ENV['BREACAN_TEAM'] = 'foobar'
 
 def fixture_path
@@ -32,5 +32,5 @@ end
 
 def stub_get(endpoint)
   stub_request(:get, slack_url(endpoint)).
-    to_return json_response("#{endpoint}.json")
+    to_return json_response("#{endpoint}")
 end
