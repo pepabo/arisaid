@@ -90,7 +90,8 @@
                 "real_name": "Foo Bar3",
                 "real_name_normalized": "Foo Bar3",
                 "email": "foo@bar3.com"
-            }
+            },
+            "is_bot": false
         },
         {
             "id": "U000A01A3",
@@ -121,7 +122,15 @@
                 "real_name": "Foo Bar4",
                 "real_name_normalized": "Foo Bar4",
                 "email": "foo@bar4.com"
-            }
+            },
+            "is_admin": false,
+            "is_owner": false,
+            "is_primary_owner": false,
+            "is_restricted": false,
+            "is_ultra_restricted": false,
+            "is_bot": false,
+            "has_2fa": true,
+            "two_factor_type": "app"
         }
     ]
 }
