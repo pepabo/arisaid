@@ -56,7 +56,9 @@ module Arisaid
         when dst.nil? then create src
         when same?(src, dst) then nil
         when changed?(src, dst) then update(src)
-        else update_users(src)
+        else
+          usergroup = usergroups.find_by(name: src['name'])
+          update_users(usergroup.id, src)
         end
       end if !(enabled && Arisaid.read_only?)
 
@@ -75,7 +77,7 @@ module Arisaid
     def create(src)
       group = client.create_usergroup(
         src.slice(*self.class.usergroup_valid_attributes.map(&:to_s)))
-      update_users(nil, group.id) if group.respond_to?(:id)
+      update_users(group.id, src) if group.respond_to?(:id)
     end
 
     def enable(group)
@@ -94,8 +96,7 @@ module Arisaid
       client.update_usergroup(data)
     end
 
-    def update_users(src, group_id = nil)
-      group_id = usergroups.find_by(name: src['name']).id if group_id.nil?
+    def update_users(group_id, src)
       data = {
         usergroup: group_id,
         users: usernames_to_ids(src['users']).join(',')
