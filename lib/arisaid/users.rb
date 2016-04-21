@@ -13,6 +13,9 @@ module Arisaid
       }
     end
 
+    def apply
+    end
+
     class << self
       def user_valid_attributes
         %i(
