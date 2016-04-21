@@ -6,6 +6,7 @@
             "team_id": "T00AAA0AA",
             "name": "foobar1",
             "deleted": false,
+            "real_name": "Foo Bar1",
             "profile": {
                 "bot_id":"B000ZZ0ZZ",
                 "image_24": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_24.jpg",
@@ -20,6 +21,11 @@
                 "real_name": "",
                 "real_name_normalized": ""
             },
+            "is_admin": false,
+            "is_owner": false,
+            "is_primary_owner": false,
+            "is_restricted": false,
+            "is_ultra_restricted": false,
             "is_bot": true
         },
         {

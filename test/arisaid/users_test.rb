@@ -7,10 +7,10 @@ class Arisaid_UsersTest < Minitest::Test
   @@yml = <<-YML.lstrip
 ---
 - name: foobar2
-  real: Foo
+  real: Foo Bar2
   email: foo@bar2.com
 - name: foobar4
-  real: Foo
+  real: Foo Bar4
   email: foo@bar4.com
 YML
 

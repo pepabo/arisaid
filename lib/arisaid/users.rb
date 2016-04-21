@@ -7,7 +7,7 @@ module Arisaid
     def remote!
       @remote = users!.map { |user|
         hash = user.to_h.slice(*self.class.user_valid_attributes)
-        hash[:real] = user.profile.first_name if user.profile.first_name
+        hash[:real] = user.real_name if user.real_name && !user.real_name.empty?
         hash[:email] = user.profile.email if user.profile.email
         hash.stringify_keys
       }
