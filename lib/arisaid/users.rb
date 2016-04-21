@@ -1,17 +1,8 @@
 module Arisaid
   class Users
     include Arisaid::Client
+    include Arisaid::Userable
     include Arisaid::Syncable
-
-    attr_reader :users
-
-    def users
-      @users || users!
-    end
-
-    def users!
-      @users = client.users.select { |u| u.deleted == false }
-    end
 
     def remote!
       @remote = users!.map { |user|

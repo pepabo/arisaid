@@ -1,9 +1,8 @@
 module Arisaid
   class Usergroups
     include Arisaid::Client
+    include Arisaid::Userable
     include Arisaid::Syncable
-
-    attr_reader :users
 
     def usergroups
       @usergroups || usergroups!
@@ -20,10 +19,6 @@ module Arisaid
     def usergroups_with_disabled!
       @usergroups_with_disabled =
         client.usergroups(include_users: 1, include_disabled: 1)
-    end
-
-    def users
-      @users ||= client.users
     end
 
     def remote!
