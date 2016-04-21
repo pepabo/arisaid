@@ -10,7 +10,7 @@ module Arisaid
     end
 
     def users!
-      @users = client.users
+      @users = client.users.select { |u| u.deleted == false }
     end
 
     def remote!
