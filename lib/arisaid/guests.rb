@@ -1,11 +1,11 @@
 module Arisaid
-  class Users
+  class Guests
     include Arisaid::Client
     include Arisaid::Userable
     include Arisaid::Syncable
 
     def remote!
-      @remote = users!.map { |user|
+      @remote = guests!.map { |user|
         hash = user.to_h.slice(*self.class.user_valid_attributes)
         hash[:real] = user.real_name if user.real_name && !user.real_name.empty?
         hash[:email] = user.profile.email if user.profile.email

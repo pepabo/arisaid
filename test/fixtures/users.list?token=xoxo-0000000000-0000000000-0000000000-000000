@@ -6,6 +6,7 @@
             "team_id": "T00AAA0AA",
             "name": "foobar1",
             "deleted": false,
+            "real_name": "Foo Bar1",
             "profile": {
                 "bot_id":"B000ZZ0ZZ",
                 "image_24": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_24.jpg",
@@ -20,6 +21,11 @@
                 "real_name": "",
                 "real_name_normalized": ""
             },
+            "is_admin": false,
+            "is_owner": false,
+            "is_primary_owner": false,
+            "is_restricted": false,
+            "is_ultra_restricted": false,
             "is_bot": true
         },
         {
@@ -90,7 +96,8 @@
                 "real_name": "Foo Bar3",
                 "real_name_normalized": "Foo Bar3",
                 "email": "foo@bar3.com"
-            }
+            },
+            "is_bot": false
         },
         {
             "id": "U000A01A3",
@@ -121,7 +128,93 @@
                 "real_name": "Foo Bar4",
                 "real_name_normalized": "Foo Bar4",
                 "email": "foo@bar4.com"
-            }
+            },
+            "is_admin": false,
+            "is_owner": false,
+            "is_primary_owner": false,
+            "is_restricted": false,
+            "is_ultra_restricted": false,
+            "is_bot": false,
+            "has_2fa": true,
+            "two_factor_type": "app"
+        },
+        {
+            "id": "U000A01A5",
+            "team_id": "T00AAA0AA",
+            "name": "foobar5",
+            "deleted": false,
+            "status": null,
+            "color": "684b6c",
+            "real_name": "Foo Bar5",
+            "tz": "Asia/Tokyo",
+            "tz_label": "Japan Standard Time",
+            "tz_offset": 32400,
+            "profile": {
+                "first_name": "Foo",
+                "last_name": "Bar5",
+                "title": "zzzz",
+                "skype": "foobar5",
+                "phone": "09012341237",
+                "image_24": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_24.jpg",
+                "image_32": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_32.jpg",
+                "image_48": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_48.jpg",
+                "image_72": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_72.jpg",
+                "image_192": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_192.jpg",
+                "image_512": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_512.jpg",
+                "image_1024": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_1024.jpg",
+                "image_original": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_original.jpg",
+                "avatar_hash": "1234567890ae",
+                "real_name": "Foo Bar5",
+                "real_name_normalized": "Foo Bar5",
+                "email": "foo@bar5.com"
+            },
+            "is_admin": false,
+            "is_owner": false,
+            "is_primary_owner": false,
+            "is_restricted": true,
+            "is_ultra_restricted": true,
+            "is_bot": false,
+            "has_2fa": true,
+            "two_factor_type": "app"
+        },
+        {
+            "id": "U000A01A6",
+            "team_id": "T00AAA0AA",
+            "name": "foobar6",
+            "deleted": true,
+            "status": null,
+            "color": "684b6c",
+            "real_name": "Foo Bar6",
+            "tz": "Asia/Tokyo",
+            "tz_label": "Japan Standard Time",
+            "tz_offset": 32400,
+            "profile": {
+                "first_name": "Foo",
+                "last_name": "Bar6",
+                "title": "zzzz",
+                "skype": "foobar6",
+                "phone": "09012341239",
+                "image_24": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_24.jpg",
+                "image_32": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_32.jpg",
+                "image_48": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_48.jpg",
+                "image_72": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_72.jpg",
+                "image_192": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_192.jpg",
+                "image_512": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_512.jpg",
+                "image_1024": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_1024.jpg",
+                "image_original": "https://avatars.slack-edge.com/2016-01-01/0123456789_00a0aa000a00a0a000a0_original.jpg",
+                "avatar_hash": "1234567890af",
+                "real_name": "Foo Bar6",
+                "real_name_normalized": "Foo Bar6",
+                "email": "foo@bar6.com"
+            },
+            "is_admin": false,
+            "is_owner": false,
+            "is_primary_owner": false,
+            "is_restricted": true,
+            "is_ultra_restricted": true,
+            "is_bot": false,
+            "has_2fa": true,
+            "two_factor_type": "app"
         }
     ]
 }
