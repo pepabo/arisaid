@@ -102,7 +102,11 @@ module Arisaid
     def usernames_to_ids(usernames)
       usernames.each.with_object([]) do |username, memo|
         user = users.find_by(name: username)
-        memo << user.id if user
+        if user
+          memo << user.id
+        else
+          puts "#{'user not found:'.colorize(:red)} #{username}"
+        end
       end
     end
 
