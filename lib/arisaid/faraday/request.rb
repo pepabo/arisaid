@@ -18,7 +18,7 @@ module Arisaid
 
       def show_request(env)
         unescaped_url = URI.unescape(env.url.to_s)
-        puts "#{env.method}: #{Breacan::Error.new.send(:redact_url, unescaped_url)}#{' (no request)' unless read?(env)}"
+        puts "#{env.method}: #{Breacan::Error.new.send(:redact_url, unescaped_url)}#{' (no request)' unless requestable?(env)}"
       end
 
       def stub_out(env)
@@ -31,10 +31,14 @@ module Arisaid
         return env.method == :get && unread_pattern !~ env.url.to_s
       end
 
+      def requestable?(env)
+        !Arisaid.read_only? || read?(env)
+      end
+
       def call(env)
         show_request(env) if Arisaid.read_only? || Arisaid.debug?
 
-        if !Arisaid.read_only? || read?(env)
+        if requestable?(env)
           @app.call(env)
         else
           stub_out(env)
