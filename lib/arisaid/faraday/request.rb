@@ -18,7 +18,7 @@ module Arisaid
 
       def show_request(env)
         unescaped_url = URI.unescape(env.url.to_s)
-        puts "#{env.method}: #{Breacan::Error.new.send(:redact_url, unescaped_url)}#{' (no request)' unless requestable?(env)}"
+        puts "#{env.method}: #{Breacan::Error.new.send(:redact_url, unescaped_url)}#{' dryrun'.colorize(:yellow) unless requestable?(env)}"
       end
 
       def stub_out(env)

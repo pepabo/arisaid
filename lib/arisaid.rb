@@ -1,6 +1,7 @@
 require 'breacan'
 require 'yaml'
 require 'thor'
+require 'colorize'
 
 require 'arisaid/version'
 require 'arisaid/core_ext/hash'
