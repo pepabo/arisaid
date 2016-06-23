@@ -87,7 +87,7 @@ module Arisaid
     def update(src)
       group = usergroups.find_by(name: src['name'])
       data = src.dup
-      data[:usergroup] = group.id
+      data['usergroup'] = group.id
       client.update_usergroup(data)
     end
 
