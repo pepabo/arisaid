@@ -20,7 +20,7 @@ module Arisaid
     end
 
     def local
-      local_by_stdin || local_by_file
+      merge_users(local_by_stdin || local_by_file)
     end
 
     def local_by_stdin
@@ -38,6 +38,13 @@ module Arisaid
         raise Arisaid::ConfNotFound.new("Not found: #{local_file_path}")
       end
       YAML.load_file(local_file_path)
+    end
+
+    def merge_users(config)
+      config.map do |c|
+        c["users"] = c["users"].flatten.uniq
+        c
+      end
     end
 
     def initialize(team = nil)
