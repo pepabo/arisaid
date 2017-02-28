@@ -1,0 +1,9 @@
+language: ruby
+dist: trusty
+rvm:
+  - 2.4.0
+  - 2.3.3
+before_install: gem update bundler --no-document
+script:
+  - bundle exec rake test
+cache: bundler
