@@ -59,7 +59,7 @@ module Arisaid
 
         next if same?(src, dst)
 
-        if src['description'] != dst['description'] || src['users'].flatten.sort != dst['users'].flatten.sort
+        if changed?(src, dst)
           puts "update usergroup: #{src['name']}"
         end
 
@@ -78,11 +78,6 @@ module Arisaid
             puts "  - user #{u}"
           end
         end
-
-        if changed?(src, dst)
-          puts "update #{src['name']}]}" if Arisaid.read_only?
-        end
-
       end if Arisaid.read_only?
 
       remote.each do |dst|
@@ -118,7 +113,8 @@ module Arisaid
     end
 
     def changed?(src, dst)
-      !same?(src, dst) && src['users'] == dst['users']
+      !same?(src, dst) &&
+          (src['users'].flatten.sort != dst['users'].flatten.sort ||  src['description'] != dst['description'])
     end
 
     def create(src)
