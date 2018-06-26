@@ -44,8 +44,11 @@ module Arisaid
       end
 
       remote! if enabled
+
       local.each do |src|
         dst = remote.find_by(name: src['name'])
+
+        next if same?(src, dst)
 
         if dst.nil?
           puts "create usergroup: #{src['name']}"
@@ -53,10 +56,6 @@ module Arisaid
           src['users'].flatten.each do |user|
             puts "  + user #{user}"
           end
-          next
-        end
-
-        if same?(src, dst)
           next
         end
 
