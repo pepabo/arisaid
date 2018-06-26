@@ -48,8 +48,6 @@ module Arisaid
       local.each do |src|
         dst = remote.find_by(name: src['name'])
 
-        next if same?(src, dst)
-
         if dst.nil?
           puts "create usergroup: #{src['name']}"
           puts "  + description: #{src['description']}"
@@ -58,6 +56,8 @@ module Arisaid
           end
           next
         end
+
+        next if same?(src, dst)
 
         if src['description'] != dst['description'] || src['users'].flatten.sort != dst['users'].flatten.sort
           puts "update usergroup: #{src['name']}"
@@ -108,6 +108,13 @@ module Arisaid
       end
 
       nil
+    end
+
+    def same?(src, dst)
+      src['name'] == dst['name'] &&
+          src['description'] == dst['description'] &&
+          src['handle'] == dst['handle'] &&
+          src['users'].flatten.sort == dst['users'].flatten.sort
     end
 
     def changed?(src, dst)
