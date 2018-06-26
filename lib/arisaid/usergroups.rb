@@ -44,6 +44,52 @@ module Arisaid
       end
 
       remote! if enabled
+      local.each do |src|
+        dst = remote.find_by(name: src['name'])
+
+        if dst.nil?
+          puts "create usergroup: #{src['name']}"
+          puts "  + description: #{src['description']}"
+          src['users'].flatten.each do |user|
+            puts "  + user #{user}"
+          end
+          next
+        end
+
+        if same?(src, dst)
+          next
+        end
+
+        if src['description'] != dst['description'] || src['users'].flatten.sort != dst['users'].flatten.sort
+          puts "update usergroup: #{src['name']}"
+        end
+
+        if src['description'] != dst['description']
+          puts "  - description: #{src['description']}"
+          puts "  + description: #{dst['description']}"
+        end
+
+        if src['users'].flatten.sort != dst['users'].flatten.sort
+          add = src['users'].flatten.sort  - dst['users'].flatten.sort
+          delete = dst['users'].flatten.sort - src['users'].flatten.sort
+          add.each do |u|
+            puts "  + user #{u}"
+          end
+          delete.each do |u|
+            puts "  - user #{u}"
+          end
+        end
+
+        if changed?(src, dst)
+          puts "update #{src['name']}]}" if Arisaid.read_only?
+        end
+
+      end if Arisaid.read_only?
+
+      remote.each do |dst|
+        src = local.find_by(name: dst['name'])
+        puts "disable #{dst['name']}" if src.nil?
+      end if Arisaid.read_only?
 
       local.each do |src|
         dst = remote.find_by(name: src['name'])
