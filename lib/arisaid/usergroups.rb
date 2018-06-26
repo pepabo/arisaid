@@ -63,12 +63,12 @@ module Arisaid
           puts "update usergroup: #{src['name']}"
         end
 
-        if src['description'] != dst['description']
+        if description_changed?(src, dst)
           puts "  - description: #{src['description']}"
           puts "  + description: #{dst['description']}"
         end
 
-        if src['users'].flatten.sort != dst['users'].flatten.sort
+        if users_changed?(src, dst)
           add = src['users'].flatten.sort  - dst['users'].flatten.sort
           delete = dst['users'].flatten.sort - src['users'].flatten.sort
           add.each do |u|
@@ -113,8 +113,15 @@ module Arisaid
     end
 
     def changed?(src, dst)
-      !same?(src, dst) &&
-          (src['users'].flatten.sort != dst['users'].flatten.sort ||  src['description'] != dst['description'])
+      !same?(src, dst) && (users_changed?(src, dst) || description_changed?(src, dst))
+    end
+
+    def users_changed?(src, dst)
+      src['users'].flatten.sort != dst['users'].flatten.sort
+    end
+
+    def description_changed?(src, dst)
+      src['description'] != dst['description']
     end
 
     def create(src)
