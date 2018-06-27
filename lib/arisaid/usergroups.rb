@@ -54,6 +54,8 @@ module Arisaid
           src['users'].flatten.each do |user|
             puts "  + user #{user}"
           end
+
+          create(src) unless Arisaid.read_only?
           next
         end
 
@@ -61,6 +63,7 @@ module Arisaid
 
         if changed?(src, dst)
           puts "update usergroup: #{src['name']}"
+          update(src)
         end
 
         if description_changed?(src, dst)
@@ -77,25 +80,15 @@ module Arisaid
           delete.each do |u|
             puts "  - user #{u}"
           end
+          usergroup = usergroups.find_by(name: src['name'])
+          update_users(usergroup.id, src)
         end
-      end if Arisaid.read_only?
+      end if !(enabled && Arisaid.read_only?)
 
       remote.each do |dst|
         src = local.find_by(name: dst['name'])
         puts "disable #{dst['name']}" if src.nil?
       end if Arisaid.read_only?
-
-      local.each do |src|
-        dst = remote.find_by(name: src['name'])
-        case
-        when dst.nil? then create src
-        when same?(src, dst) then nil
-        when changed?(src, dst) then update(src)
-        else
-          usergroup = usergroups.find_by(name: src['name'])
-          update_users(usergroup.id, src)
-        end
-      end if !(enabled && Arisaid.read_only?)
 
       remote.each do |dst|
         src = local.find_by(name: dst['name'])
