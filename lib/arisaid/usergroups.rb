@@ -66,11 +66,6 @@ module Arisaid
           update(src)
         end
 
-        if description_changed?(src, dst)
-          puts "  - description: #{src['description']}"
-          puts "  + description: #{dst['description']}"
-        end
-
         if users_changed?(src, dst)
           add = src['users'].flatten.sort  - dst['users'].flatten.sort
           delete = dst['users'].flatten.sort - src['users'].flatten.sort
