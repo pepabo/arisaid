@@ -88,7 +88,6 @@ module Arisaid
       remote.each do |dst|
         src = local.find_by(name: dst['name'])
         puts "disable #{dst['name']}" if src.nil?
-        src = local.find_by(name: dst['name'])
         disable dst if src.nil? && !Arisaid.read_only?
       end
 
