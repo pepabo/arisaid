@@ -45,36 +45,51 @@ module Arisaid
 
       remote! if enabled
 
+      if Arisaid.read_only?
+        local.each do |src|
+          dst = remote.find_by(name: src['name'])
+
+          if dst.nil?
+            puts "create usergroup: #{src['name']}"
+            puts "  + description: #{src['description']}"
+            src['users'].flatten.each do |user|
+              puts "  + user #{user}"
+            end
+
+            next
+          end
+
+          next if same?(src, dst)
+
+          if changed?(src, dst)
+            puts "update usergroup: #{src['name']}"
+          end
+
+          if users_changed?(src, dst)
+            add = src['users'].flatten.sort  - dst['users'].flatten.sort
+            delete = dst['users'].flatten.sort - src['users'].flatten.sort
+            add.each do |u|
+              puts "  + user #{u}"
+            end
+            delete.each do |u|
+              puts "  - user #{u}"
+            end
+          end
+        end
+
+        remote.each do |dst|
+          src = local.find_by(name: dst['name'])
+          puts "disable #{dst['name']}" if src.nil?
+        end
+      end
+
       local.each do |src|
         dst = remote.find_by(name: src['name'])
-
-        if dst.nil?
-          puts "create usergroup: #{src['name']}"
-          puts "  + description: #{src['description']}"
-          src['users'].flatten.each do |user|
-            puts "  + user #{user}"
-          end
-
-          create(src) unless Arisaid.read_only?
-          next
-        end
-
-        next if same?(src, dst)
-
-        if changed?(src, dst)
-          puts "update usergroup: #{src['name']}"
-          update(src)
-        end
-
-        if users_changed?(src, dst)
-          add = src['users'].flatten.sort  - dst['users'].flatten.sort
-          delete = dst['users'].flatten.sort - src['users'].flatten.sort
-          add.each do |u|
-            puts "  + user #{u}"
-          end
-          delete.each do |u|
-            puts "  - user #{u}"
-          end
+        case
+        when dst.nil? then create src
+        when same?(src, dst) then nil
+        when changed?(src, dst) then update(src)
+        else
           usergroup = usergroups.find_by(name: src['name'])
           update_users(usergroup.id, src)
         end
@@ -82,8 +97,7 @@ module Arisaid
 
       remote.each do |dst|
         src = local.find_by(name: dst['name'])
-        puts "disable #{dst['name']}" if src.nil?
-        disable dst if src.nil? && !Arisaid.read_only?
+        disable dst if src.nil?
       end
 
       nil
