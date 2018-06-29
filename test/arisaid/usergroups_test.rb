@@ -21,12 +21,7 @@ class Arisaid_UsergroupsTest < Minitest::Test
   - foobar2
 YML
 
-    expect_stdout = <<EOS
-create usergroup: yo
-  + description: Yo Members
-  + user foobar2
-EOS
-    assert_output(stdout = expect_stdout, etderr = '') do
+    assert_silent do
       Arisaid.usergroups.apply
     end
     File.delete 'usergroups.yml'
