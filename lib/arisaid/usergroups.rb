@@ -45,6 +45,44 @@ module Arisaid
 
       remote! if enabled
 
+      if Arisaid.read_only?
+        local.each do |src|
+          dst = remote.find_by(name: src['name'])
+
+          if dst.nil?
+            puts "create usergroup: #{src['name']}"
+            puts "  + description: #{src['description']}"
+            src['users'].flatten.each do |user|
+              puts "  + user #{user}"
+            end
+
+            next
+          end
+
+          next if same?(src, dst)
+
+          if changed?(src, dst)
+            puts "update usergroup: #{src['name']}"
+          end
+
+          if users_changed?(src, dst)
+            add = src['users'].flatten.sort  - dst['users'].flatten.sort
+            delete = dst['users'].flatten.sort - src['users'].flatten.sort
+            add.each do |u|
+              puts "  + user #{u}"
+            end
+            delete.each do |u|
+              puts "  - user #{u}"
+            end
+          end
+        end
+
+        remote.each do |dst|
+          src = local.find_by(name: dst['name'])
+          puts "disable #{dst['name']}" if src.nil?
+        end
+      end
+
       local.each do |src|
         dst = remote.find_by(name: src['name'])
         case
@@ -65,8 +103,23 @@ module Arisaid
       nil
     end
 
+    def same?(src, dst)
+      src['name'] == dst['name'] &&
+          src['description'] == dst['description'] &&
+          src['handle'] == dst['handle'] &&
+          src['users'].flatten.sort == dst['users'].flatten.sort
+    end
+
     def changed?(src, dst)
-      !same?(src, dst) && src['users'] == dst['users']
+      !same?(src, dst) && (users_changed?(src, dst) || description_changed?(src, dst))
+    end
+
+    def users_changed?(src, dst)
+      src['users'].flatten.sort != dst['users'].flatten.sort
+    end
+
+    def description_changed?(src, dst)
+      src['description'] != dst['description']
     end
 
     def create(src)
