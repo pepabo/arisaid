@@ -10,6 +10,8 @@ module Arisaid
           when status != 200
             puts "status: #{status}"
             puts "body: #{body}"
+          when status == 200 && !body['ok']
+            puts "error: #{body['error']}"
           else
             show_response(_env) if Arisaid.debug? && defined?(AwesomePrint)
           end
