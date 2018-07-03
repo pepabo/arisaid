@@ -3,7 +3,16 @@ module Arisaid
     class Response < ::Faraday::Middleware
       def call(env)
         @app.call(env).on_complete do |_env|
-          show_response(_env) if Arisaid.debug? && defined?(AwesomePrint)
+          status = _env.response.status
+          body = _env.response.body
+
+          case
+          when status != 200
+            puts "status: #{status}"
+            puts "body: #{body}"
+          else
+            show_response(_env) if Arisaid.debug? && defined?(AwesomePrint)
+          end
         end
       end
 
