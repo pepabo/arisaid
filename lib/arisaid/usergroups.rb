@@ -160,6 +160,7 @@ module Arisaid
           memo << user.id
         else
           puts "#{'user not found:'.colorize(:red)} #{username}"
+          Arisaid.exit_status = 1
         end
       end
     end
