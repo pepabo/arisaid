@@ -61,7 +61,7 @@ module Arisaid
 
           next if same?(src, dst)
 
-          if changed?(src, dst)
+          if changed?(src, dst) || users_changed?(src, dst)
             puts "update usergroup: #{src['name']}"
           end
 
@@ -111,7 +111,7 @@ module Arisaid
     end
 
     def changed?(src, dst)
-      !same?(src, dst) && (users_changed?(src, dst) || description_changed?(src, dst))
+      !same?(src, dst) && src['users'] == dst['users']
     end
 
     def users_changed?(src, dst)
