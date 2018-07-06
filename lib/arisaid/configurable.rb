@@ -10,6 +10,7 @@ module Arisaid
       slack_token
       save_token
       conf_prefix
+      exit_status
     )
 
     attr_accessor(*OPTIONS_KEYS)
@@ -23,6 +24,7 @@ module Arisaid
       self.read_only   = true
       self.save_token  = false
       self.conf_prefix = nil
+      self.exit_status = 0
     end
 
     def options

@@ -34,7 +34,9 @@ module Arisaid
     def apply(resource)
       Arisaid.read_only = true if options[:dryrun]
       Arisaid.debug = true if options[:debug]
+      Arisaid.exit_status = 0
       Arisaid.send(:"#{resource}", options[:team]).apply
+      exit Arisaid.exit_status
     end
   end
 end
