@@ -13,7 +13,7 @@ module Arisaid
     end
 
     def remote
-      @remote || remote!
+      @remote ||= remote!
     end
 
     def remote!
