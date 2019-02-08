@@ -3,7 +3,7 @@ module Arisaid
     attr_reader :users, :guests, :bots
 
     def users
-      @users || users!
+      @users ||= users!
     end
 
     def users!
@@ -13,7 +13,7 @@ module Arisaid
     end
 
     def guests
-      @guests || guests!
+      @guests ||= guests!
     end
 
     def guests!
@@ -23,7 +23,7 @@ module Arisaid
     end
 
     def bots
-      @bots || bots!
+      @bots ||= bots!
     end
 
     def bots!
