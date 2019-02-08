@@ -17,7 +17,7 @@ module Arisaid
       end
 
       def show_request(env)
-        unescaped_url = URI.unescape(env.url.to_s)
+        unescaped_url = Addressable::URI.encode(env.url.to_s)
         puts "#{env.method}: #{Breacan::Error.new.send(:redact_url, unescaped_url)}#{' dryrun'.colorize(:yellow) unless requestable?(env)}"
       end
 

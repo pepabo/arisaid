@@ -13,7 +13,7 @@ module Arisaid
     end
 
     def remote
-      @remote || remote!
+      @remote ||= remote!
     end
 
     def remote!
@@ -34,7 +34,7 @@ module Arisaid
     end
 
     def local_by_file
-      unless File.exists?(local_file_path)
+      unless File.exist?(local_file_path)
         raise Arisaid::ConfNotFound.new("Not found: #{local_file_path}")
       end
       YAML.load_file(local_file_path)

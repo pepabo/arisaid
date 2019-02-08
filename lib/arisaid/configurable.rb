@@ -36,15 +36,15 @@ module Arisaid
     end
 
     def debug?
-      @debug
+      @debug ||= false
     end
 
     def read_only?
-      @read_only
+      @read_only ||= false
     end
 
     def save_token?
-      @save_token
+      @save_token ||= false
     end
 
     def slack_team
