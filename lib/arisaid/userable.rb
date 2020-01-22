@@ -7,7 +7,7 @@ module Arisaid
     end
 
     def users!
-      @users = client.users.members.select { |u|
+      @users = client.users.select { |u|
         u.deleted == false && u.is_bot == false && u.is_restricted == false
       }
     end
@@ -17,7 +17,7 @@ module Arisaid
     end
 
     def guests!
-      @guests = client.users.members.select { |u|
+      @guests = client.users.select { |u|
         u.deleted == false && u.is_bot == false && u.is_restricted == true
       }
     end
@@ -27,7 +27,7 @@ module Arisaid
     end
 
     def bots!
-      @bots = client.users.members.select { |u|
+      @bots = client.users.select { |u|
         u.deleted == false && u.is_bot == true && u.is_restricted == false
       }
     end
