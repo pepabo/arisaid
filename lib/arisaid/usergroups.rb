@@ -24,7 +24,7 @@ module Arisaid
     def remote!
       @remote = usergroups!.map { |group|
         hash = group.to_h.slice(*self.class.usergroup_valid_attributes)
-        hash[:users] = group.users ? group.users.map { |id| users.find_by(id: id).name } : {}
+        hash[:users] = group.users ? group.users.map { |id| users.find_by(id: id).name rescue nil } : {}
         hash.stringify_keys
       }
     end
@@ -66,8 +66,8 @@ module Arisaid
           end
 
           if users_changed?(src, dst)
-            add = src['users'].flatten.sort  - dst['users'].flatten.sort
-            delete = dst['users'].flatten.sort - src['users'].flatten.sort
+            add = src['users'].flatten.compact.sort  - dst['users'].flatten.compact.sort
+            delete = dst['users'].flatten.compact.sort - src['users'].flatten.compact.sort
             add.each do |u|
               puts "  + user #{u}"
             end
@@ -107,7 +107,7 @@ module Arisaid
       src['name'] == dst['name'] &&
           src['description'] == dst['description'] &&
           src['handle'] == dst['handle'] &&
-          src['users'].flatten.sort == dst['users'].flatten.sort
+          src['users'].flatten.compact.sort == dst['users'].flatten.compact.sort
     end
 
     def changed?(src, dst)
@@ -115,7 +115,7 @@ module Arisaid
     end
 
     def users_changed?(src, dst)
-      src['users'].flatten.sort != dst['users'].flatten.sort
+      src['users'].flatten.compact.sort != dst['users'].flatten.compact.sort
     end
 
     def description_changed?(src, dst)
