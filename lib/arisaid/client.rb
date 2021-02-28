@@ -11,16 +11,11 @@ module Arisaid
       Arisaid.slack_team
       Arisaid.slack_token
 
-      Breacan.setup
-      Breacan.configure do |config|
-        config.middleware = ::Faraday::RackBuilder.new do |c|
-          c.request :arisaid
-          c.response :arisaid
-          c.response :breacan_custom
-          c.adapter ::Faraday.default_adapter
-        end
+      Slack.configure do |config|
+        config.token = ENV['SLACK_API_TOKEN']
       end
-      Breacan
+
+      Slack::Web::Client.new
     end
   end
 end

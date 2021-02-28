@@ -48,11 +48,11 @@ module Arisaid
     end
 
     def slack_team
-      ENV['BREACAN_TEAM'] ||= ask_slack_team
+      ENV['SLACK_TEAM'] ||= ask_slack_team
     end
 
     def slack_team=(team)
-      ENV['BREACAN_TEAM'] = team
+      ENV['SLACK_TEAM'] = team
     end
 
     def ask_slack_team
@@ -61,7 +61,7 @@ module Arisaid
     end
 
     def slack_token
-      ENV['BREACAN_ACCESS_TOKEN'] ||= slack_token!
+      ENV['SLACK_API_TOKEN'] ||= slack_token!
     end
 
     def slack_token!
