@@ -7,7 +7,7 @@ module Arisaid
     end
 
     def users!
-      @users = client.users.select { |u|
+      @users = client.users_list.members.select { |u|
         u.deleted == false && u.is_bot == false && u.is_restricted == false
       }
     end
