@@ -18,12 +18,12 @@ module Arisaid
 
     def usergroups_with_disabled!
       @usergroups_with_disabled =
-        client.usergroups(include_users: 1, include_disabled: 1)
+        client.usergroups_list(include_users: true, include_disabled: true).usergroups
     end
 
     def remote!
       @remote = usergroups!.map { |group|
-        hash = group.to_h.slice(*self.class.usergroup_valid_attributes)
+        hash = group.to_h.symbolize_keys.slice(*self.class.usergroup_valid_attributes)
         hash[:users] = group.users ? group.users.map { |id| users.find_by(id: id).name rescue nil } : {}
         hash.stringify_keys
       }
@@ -129,7 +129,7 @@ module Arisaid
     end
 
     def enable(group)
-      client.enable_usergroup(usergroup: group.id)
+      client.usergroups_enable(usergroup: group.id)
     end
 
     def disable(dst)
