@@ -18,7 +18,7 @@ module Arisaid
 
       def show_request(env)
         unescaped_url = Addressable::URI.encode(env.url.to_s)
-        puts "#{env.method}: #{Breacan::Error.new.send(:redact_url, unescaped_url)}#{' dryrun'.colorize(:yellow) unless requestable?(env)}"
+        puts "#{env.method}: #{Slack::Web::Api::Errors.new.send(:redact_url, unescaped_url)}#{' dryrun'.colorize(:yellow) unless requestable?(env)}"
       end
 
       def stub_out(env)
