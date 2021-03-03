@@ -11,16 +11,16 @@ module Slack
   module Web
     module Faraday
       module Request
+        UNREAD_PATTERN = %w(
+          create
+          disable
+          enable
+          update
+          setActive
+          setPresence
+        )
         def post(path, options = {})
-          unread_pattern = %w(
-            create
-            disable
-            enable
-            update
-            setActive
-            setPresence
-          )
-          if unread_pattern.include?(path.to_s.split(".").last)
+          if UNREAD_PATTERN.include?(path.to_s.split(".").last)
             puts "post to #{path} :dryrun"
             return true
           end
@@ -29,15 +29,7 @@ module Slack
         end
 
         def put(path, options = {})
-          unread_pattern = %w(
-            create
-            disable
-            enable
-            update
-            setActive
-            setPresence
-          )
-          if unread_pattern.include?(path.to_s.split(".").last)
+          if UNREAD_PATTERN.include?(path.to_s.split(".").last)
             puts "put to #{path} :dryrun"
             return true
           end
