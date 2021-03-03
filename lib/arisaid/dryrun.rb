@@ -41,6 +41,7 @@ module Slack
             puts "put to #{path} :dryrun"
             return true
           end
+
           request(:put, path, options)
         end
       end
