@@ -1,6 +1,3 @@
-require 'arisaid/faraday/request'
-require 'arisaid/faraday/response'
-
 module Arisaid
   module Client
     def client
@@ -19,3 +16,4 @@ module Arisaid
     end
   end
 end
+
