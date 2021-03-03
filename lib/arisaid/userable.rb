@@ -7,7 +7,12 @@ module Arisaid
     end
 
     def users!
-      @users = client.users_list.members.select { |u|
+      all_users = []
+      client.users_list(presence: true, max_retries: 20) do |response|
+        all_users.concat(response.members)
+      end
+
+      @users = all_users.select { |u|
         u.deleted == false && u.is_bot == false && u.is_restricted == false
       }
     end
