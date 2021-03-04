@@ -11,7 +11,7 @@ module Slack
   module Web
     module Faraday
       module Request
-        UNREAD_PATTERN = %w(
+        WRITABLE_METHODS = %w(
           create
           disable
           enable
@@ -20,7 +20,7 @@ module Slack
           setPresence
         )
         def post(path, options = {})
-          if UNREAD_PATTERN.include?(path.to_s.split(".").last)
+          if WRITABLE_METHODS.include?(path.to_s.split(".").last)
             puts "post to #{path} :dryrun"
             return true
           end
@@ -29,7 +29,7 @@ module Slack
         end
 
         def put(path, options = {})
-          if UNREAD_PATTERN.include?(path.to_s.split(".").last)
+          if WRITABLE_METHODS.include?(path.to_s.split(".").last)
             puts "put to #{path} :dryrun"
             return true
           end
