@@ -18,12 +18,12 @@ module Arisaid
 
     def usergroups_with_disabled!
       @usergroups_with_disabled =
-        client.usergroups(include_users: 1, include_disabled: 1)
+        client.usergroups_list(include_users: true, include_disabled: true).usergroups
     end
 
     def remote!
       @remote = usergroups!.map { |group|
-        hash = group.to_h.slice(*self.class.usergroup_valid_attributes)
+        hash = group.to_h.symbolize_keys.slice(*self.class.usergroup_valid_attributes)
         hash[:users] = group.users ? group.users.map { |id| users.find_by(id: id).name rescue nil } : {}
         hash.stringify_keys
       }
@@ -123,18 +123,17 @@ module Arisaid
     end
 
     def create(src)
-      group = client.create_usergroup(
-        src.slice(*self.class.usergroup_valid_attributes.map(&:to_s)))
+      group = client.usergroups_create(src.symbolize_keys)
       update_users(group.id, src) if group.respond_to?(:id)
     end
 
     def enable(group)
-      client.enable_usergroup(usergroup: group.id)
+      client.usergroups_enable(usergroup: group.id)
     end
 
     def disable(dst)
       group = usergroups.find_by(name: dst['name'])
-      client.disable_usergroup(usergroup: group.id)
+      client.usergroups_disable(usergroup: group.id)
     end
 
     def update(src)
@@ -142,7 +141,7 @@ module Arisaid
       data = src.dup
       data['usergroup'] = group.id
       data.delete('users') unless data['users'].nil?
-      client.update_usergroup(data)
+      client.usergroups_update(data)
     end
 
     def update_users(group_id, src)
@@ -150,7 +149,7 @@ module Arisaid
         usergroup: group_id,
         users: usernames_to_ids(src['users']).join(',')
       }
-      client.update_usergroup_users(data)
+      client.usergroups_users_update(data)
     end
 
     def usernames_to_ids(usernames)
