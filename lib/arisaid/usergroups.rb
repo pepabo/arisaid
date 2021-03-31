@@ -123,8 +123,8 @@ module Arisaid
     end
 
     def create(src)
-      group = client.usergroups_create(src.symbolize_keys)
-      update_users(group.id, src) if group.respond_to?(:id)
+      group = client.usergroups_create(src.symbolize_keys.reject {|key| key == :users})
+      update_users(group.usergroups.id, src) if group.ok
     end
 
     def enable(group)
