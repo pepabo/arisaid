@@ -32,7 +32,10 @@ module Arisaid
     option :dryrun, type: :boolean, aliases: '-n', desc: 'dry run'
     desc 'apply [RESOURCE]', "apply #{RESOURCES.join(', ')}"
     def apply(resource)
-      Arisaid.read_only = true if options[:dryrun]
+      if options[:dryrun]
+        Arisaid.read_only = true
+        require 'arisaid/dryrun'
+      end
       Arisaid.debug = true if options[:debug]
       Arisaid.exit_status = 0
       Arisaid.send(:"#{resource}", options[:team]).apply

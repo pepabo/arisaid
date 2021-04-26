@@ -1,4 +1,4 @@
-require 'breacan'
+require 'slack-ruby-client'
 require 'yaml'
 require 'thor'
 require 'colorize'
