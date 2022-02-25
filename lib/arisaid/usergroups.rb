@@ -32,7 +32,7 @@ module Arisaid
     def apply
       enabled = false
 
-      puts "==== All ===="
+      puts "==== Fetch all setting and enable groups ===="
       local.each do |src|
         puts "  - #{src['name']}"
         dst = remote.find_by(name: src['name'])
@@ -48,7 +48,7 @@ module Arisaid
       remote! if enabled
 
       if Arisaid.read_only?
-        puts "==== Read Only ===="
+        puts "==== Create usergroups ===="
         local.each do |src|
           puts "  - #{src['name']}"
           dst = remote.find_by(name: src['name'])
@@ -87,7 +87,7 @@ module Arisaid
         end
       end
 
-      puts "==== Local ===="
+      puts "==== Update usergroups ===="
       local.each do |src|
         puts "  - #{src['name']}"
         dst = remote.find_by(name: src['name'])
@@ -101,7 +101,7 @@ module Arisaid
         end
       end if !(enabled && Arisaid.read_only?)
 
-      puts "==== Remote ===="
+      puts "==== Disable usergroups ===="
       remote.each do |dst|
         puts "  - #{dst['name']}"
         src = local.find_by(name: dst['name'])
