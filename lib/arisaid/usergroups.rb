@@ -70,7 +70,7 @@ module Arisaid
           end
 
           if users_changed?(src, dst)
-            add = src['users'].flatten.compact.sort  - dst['users'].flatten.compact.sort
+            add = src['users'].flatten.compact.sort - dst['users'].flatten.compact.sort
             delete = dst['users'].flatten.compact.sort - src['users'].flatten.compact.sort
             add.each do |u|
               puts "  + user #{u}"
@@ -92,12 +92,12 @@ module Arisaid
         puts "  - #{src['name']}"
         dst = remote.find_by(name: src['name'])
         case
-        when dst.nil? then create src
-        when same?(src, dst) then nil
-        when changed?(src, dst) then update(src)
-        else
-          usergroup = usergroups.find_by(name: src['name'])
-          update_users(usergroup.id, src)
+          when dst.nil? then create src
+          when same?(src, dst) then nil
+          when changed?(src, dst) then update(src)
+          else
+            usergroup = usergroups.find_by(name: src['name'])
+            update_users(usergroup.id, src)
         end
       end if !(enabled && Arisaid.read_only?)
 
@@ -116,9 +116,9 @@ module Arisaid
 
     def same?(src, dst)
       src['name'] == dst['name'] &&
-          src['description'] == dst['description'] &&
-          src['handle'] == dst['handle'] &&
-          src['users'].flatten.compact.sort == dst['users'].flatten.compact.sort
+        src['description'] == dst['description'] &&
+        src['handle'] == dst['handle'] &&
+        src['users'].flatten.compact.sort == dst['users'].flatten.compact.sort
     end
 
     def changed?(src, dst)
@@ -134,7 +134,7 @@ module Arisaid
     end
 
     def create(src)
-      group = client.usergroups_create(src.symbolize_keys.reject {|key| key == :users})
+      group = client.usergroups_create(src.symbolize_keys.reject { |key| key == :users })
       update_users(group.usergroup.id, src) if group.respond_to?(:usergroup)
     rescue => e
       puts "   src: #{src}"
@@ -172,11 +172,12 @@ module Arisaid
         usergroup: group_id,
         users: usernames_to_ids(src['users']).join(',')
       }
-    begin
-      client.usergroups_users_update(data)
-    rescue => e
-      puts "   src: #{data}"
-      raise e
+      begin
+        client.usergroups_users_update(data)
+      rescue => e
+        puts "   src: #{data}"
+        raise e
+      end
     end
 
     def usernames_to_ids(usernames)
