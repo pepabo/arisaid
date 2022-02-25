@@ -32,7 +32,9 @@ module Arisaid
     def apply
       enabled = false
 
+      puts "==== All ===="
       local.each do |src|
+        puts "  - #{src['name']}"
         dst = remote.find_by(name: src['name'])
         next unless dst.nil?
 
@@ -46,7 +48,9 @@ module Arisaid
       remote! if enabled
 
       if Arisaid.read_only?
+        puts "==== Read Only ===="
         local.each do |src|
+          puts "  - #{src['name']}"
           dst = remote.find_by(name: src['name'])
 
           if dst.nil?
@@ -83,7 +87,9 @@ module Arisaid
         end
       end
 
+      puts "==== Local ===="
       local.each do |src|
+        puts "  - #{src['name']}"
         dst = remote.find_by(name: src['name'])
         case
         when dst.nil? then create src
@@ -95,12 +101,17 @@ module Arisaid
         end
       end if !(enabled && Arisaid.read_only?)
 
+      puts "==== Remote ===="
       remote.each do |dst|
+        puts "  - #{dst['name']}"
         src = local.find_by(name: dst['name'])
         disable dst if src.nil?
       end
 
       nil
+    rescue => e
+      puts "#{e.message}\n  #{e.backtrace&.join("\n  ")}"
+      raise e
     end
 
     def same?(src, dst)
@@ -125,10 +136,16 @@ module Arisaid
     def create(src)
       group = client.usergroups_create(src.symbolize_keys.reject {|key| key == :users})
       update_users(group.usergroup.id, src) if group.respond_to?(:usergroup)
+    rescue => e
+      puts "   src: #{src}"
+      raise e
     end
 
     def enable(group)
       client.usergroups_enable(usergroup: group.id)
+    rescue => e
+      puts "   src: #{group}"
+      raise e
     end
 
     def disable(dst)
@@ -141,7 +158,13 @@ module Arisaid
       data = src.dup
       data['usergroup'] = group.id
       data.delete('users') unless data['users'].nil?
-      client.usergroups_update(data)
+      begin
+        client.usergroups_update(data)
+      rescue => e
+        puts "   src: #{src.inspect}"
+        puts "  data: #{data.inspect}"
+        raise e
+      end
     end
 
     def update_users(group_id, src)
@@ -149,7 +172,11 @@ module Arisaid
         usergroup: group_id,
         users: usernames_to_ids(src['users']).join(',')
       }
+    begin
       client.usergroups_users_update(data)
+    rescue => e
+      puts "   src: #{data}"
+      raise e
     end
 
     def usernames_to_ids(usernames)
