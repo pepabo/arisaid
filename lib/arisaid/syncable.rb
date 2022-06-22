@@ -42,6 +42,9 @@ module Arisaid
 
     def merge_users(config)
       config.map do |c|
+        unless c["users"]
+          raise Arisaid::InvalidConf.new("Empty 'users' are not allowed: #{c["name"]}")
+        end
         c["users"] = c["users"].flatten.uniq
         c
       end
