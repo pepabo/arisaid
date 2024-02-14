@@ -29,7 +29,7 @@ module Arisaid
         while str = STDIN.gets
           buffer << str
         end
-        YAML.load(buffer.chomp)
+        YAML.safe_load(buffer.chomp, aliases:true)
       end
     end
 
@@ -37,7 +37,7 @@ module Arisaid
       unless File.exist?(local_file_path)
         raise Arisaid::ConfNotFound.new("Not found: #{local_file_path}")
       end
-      YAML.load_file(local_file_path)
+      YAML.load_file(local_file_path, aliases:true)
     end
 
     def merge_users(config)
