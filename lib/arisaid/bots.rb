@@ -14,7 +14,7 @@ module Arisaid
 
     class << self
       def bot_valid_attributes
-        %i(
+        %w(
           name
         )
       end
