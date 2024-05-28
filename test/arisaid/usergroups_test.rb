@@ -2,9 +2,10 @@ require 'helper'
 
 class Arisaid_UsergroupsTest < Minitest::Test
   def test_apply
-    stub_get "users.list?token=#{Arisaid.slack_token}"
-    stub_get "usergroups.list?include_disabled=1&include_users=1&token=#{Arisaid.slack_token}"
-    stub_get "usergroups.create?description=Yo%20Members&handle=yo&name=yo&token=#{Arisaid.slack_token}"
+    stub_get "users.list", Arisaid.slack_token
+    stub_get "usergroups.list", Arisaid.slack_token
+    stub_get "usergroups.create", Arisaid.slack_token
+    stub_get "usergroups.users.update", Arisaid.slack_token
 
     File.write 'usergroups.yml', <<-YML.lstrip
 ---
@@ -21,15 +22,26 @@ class Arisaid_UsergroupsTest < Minitest::Test
   - foobar2
 YML
 
-    assert_silent do
+    output = <<-YML.lstrip
+==== Fetch all setting and enable groups ====
+  - tokyo
+  - yo
+==== Update usergroups ====
+  - tokyo
+  - yo
+==== Disable usergroups ====
+  - tokyo
+YML
+
+    assert_output(output) do
       Arisaid.usergroups.apply
     end
     File.delete 'usergroups.yml'
   end
 
   def test_show
-    stub_get "users.list?token=#{Arisaid.slack_token}"
-    stub_get "usergroups.list?include_disabled=1&include_users=1&token=#{Arisaid.slack_token}"
+    stub_get "users.list", Arisaid.slack_token
+    stub_get "usergroups.list", Arisaid.slack_token
 
     output = <<-YML.lstrip
 ---
@@ -47,8 +59,8 @@ YML
   end
 
   def test_save
-    stub_get "users.list?token=#{Arisaid.slack_token}"
-    stub_get "usergroups.list?include_disabled=1&include_users=1&token=#{Arisaid.slack_token}"
+    stub_get "users.list", Arisaid.slack_token
+    stub_get "usergroups.list" ,Arisaid.slack_token
 
     conf = <<-YML.lstrip
 ---
