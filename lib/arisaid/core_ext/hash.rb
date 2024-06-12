@@ -1,4 +1,6 @@
 class Hash
+  alias_method :original_slice, :slice
+
   def slice(*keys)
     keys.each_with_object(self.class.new) { |k, hash| hash[k] = self[k] if has_key?(k) }
   end
