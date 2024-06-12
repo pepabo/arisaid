@@ -6,8 +6,6 @@ module Arisaid
     OPTIONS_KEYS = %i(
       debug
       read_only
-      slack_team
-      slack_token
       save_token
       conf_prefix
       exit_status
@@ -62,6 +60,10 @@ module Arisaid
 
     def slack_token
       ENV['SLACK_API_TOKEN'] ||= slack_token!
+    end
+
+    def slack_token=(token)
+      ENV['SLACK_API_TOKEN'] = token
     end
 
     def slack_token!
