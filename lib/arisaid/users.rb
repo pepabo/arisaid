@@ -15,7 +15,7 @@ module Arisaid
 
     class << self
       def user_valid_attributes
-        %i(
+        %w(
           name
         )
       end

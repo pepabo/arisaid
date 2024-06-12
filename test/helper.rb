@@ -25,12 +25,12 @@ end
 
 def slack_url(url)
   return url if url =~ /^http/
-  url = File.join(Slack::Web::Client.new.api_endpoint, url)
+  url = File.join(Slack::Web::Config.endpoint, url)
   uri = Addressable::URI.parse(url)
   uri.to_s
 end
 
-def stub_get(endpoint)
-  stub_request(:get, slack_url(endpoint)).
+def stub_get(endpoint, token)
+  stub_request(:post, slack_url(endpoint)).
     to_return json_response("#{endpoint}")
 end

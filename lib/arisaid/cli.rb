@@ -1,4 +1,3 @@
-require 'arisaid'
 require 'thor'
 
 module Arisaid

@@ -15,7 +15,7 @@ class Arisaid_UsersTest < Minitest::Test
 YML
 
   def test_show
-    stub_get "users.list?token=#{Arisaid.slack_token}"
+    stub_get "users.list", Arisaid.slack_token
 
     assert_output(@@yml) do
       Arisaid.users.show
@@ -23,7 +23,7 @@ YML
   end
 
   def test_save
-    stub_get "users.list?token=#{Arisaid.slack_token}"
+    stub_get "users.list", Arisaid.slack_token
 
     assert_silent do
       Arisaid.users.save
